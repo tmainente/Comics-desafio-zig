@@ -1,16 +1,19 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.23"
+
 }
 
 android {
-    compileSdk 33
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.example.comics"
         namespace 'com.example.comics'
         minSdk 21
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -48,72 +51,32 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.constraintlayout)
+    implementation(libs.gson)
+    implementation(libs.coroutines.core)
+    implementation(libs.glide)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.common.java8)
+    implementation(libs.kotlin.serialization)
+    implementation(libs.koin.android)
+    implementation(libs.room.runtime)
+    implementation(libs.swiperefreshlayout)
+    implementation(libs.room.ktx)
+    kapt(libs.room.compiler)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.arch.core.testing)
 
-    implementation 'androidx.core:core-ktx:1.10.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.code.gson:gson:2.10.1'
-
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation "io.mockk:mockk:1.12.4"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1"
-    testImplementation 'androidx.arch.core:core-testing:2.2.0'
-
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"
-    implementation 'com.github.bumptech.glide:glide:4.15.1'
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation "androidx.lifecycle:lifecycle-common-java8:2.6.1"
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01"
-//    implementation "io.reactivex.rxjava2:rxjava:2.2.9"
-//    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
-
-//    def lifecycle_version = "2.6.1"
-//    def arch_version = "2.2.0"
-//
-//    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-service:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycle_version"
-//    testImplementation "androidx.arch.core:core-testing:$arch_version"
-//    testImplementation "androidx.lifecycle:lifecycle-runtime-testing:$lifecycle_version"
-
-//    def room_version = "2.4.1"
-//    implementation "androidx.room:room-runtime:$room_version"
-//    annotationProcessor "androidx.room:room-compiler:$room_version"
-//    implementation "androidx.room:room-rxjava2:$room_version"
-//    implementation "androidx.room:room-rxjava3:$room_version"
-//    implementation "androidx.room:room-guava:$room_version"
-//    testImplementation "androidx.room:room-testing:$room_version"
-//    implementation "androidx.room:room-paging:2.5.1"
-
-    //compose
-//    def composeBom = platform('androidx.compose:compose-bom:2022.10.00')
-//    implementation composeBom
-//    implementation 'androidx.compose.material3:material3'
-//    implementation 'androidx.compose.material:material'
-//    implementation 'androidx.compose.foundation:foundation'
-//    implementation "androidx.compose.ui:ui"
-//    implementation 'androidx.compose.material:material-icons-core'
-//    implementation 'androidx.compose.material:material-icons-extended'
-//    implementation 'androidx.compose.material3:material3-window-size-class'
-//    implementation 'androidx.activity:activity-compose:1.7.1'
-//    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1'
-//    implementation("androidx.compose.runtime:runtime:1.4.3")
-//    implementation "androidx.compose.runtime:runtime-livedata:1.4.3"
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.espresso.core)
 
 }
+

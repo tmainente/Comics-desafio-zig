@@ -1,20 +1,21 @@
-package com.example.comics.view
+package com.example.comics.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.comics.databinding.ActivityMainBinding
-import com.example.comics.interactor.Interactor
-import com.example.comics.presenter.Presenter
-import kotlinx.coroutines.launch
+import com.example.comics.view.Adapter
+import com.example.comics.view.IView
+import com.example.comics.view.ItemVO
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity(), IView {
 
-    private val interactor: Interactor = Interactor(Presenter(this))
 
     private var binding: ActivityMainBinding? = null
+    private val viewModel by viewModel<MainViewModel>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,22 +23,23 @@ class MainActivity : AppCompatActivity(), IView {
         setContentView(binding?.root)
 
         refrash()
+        viewModel.fetchMovie()
 
-        swipeList()
+        //swipeList()
     }
 
-    private fun swipeList() = with(binding?.swipeRefresh) {
+/*    private fun swipeList() = with(binding?.swipeRefresh) {
         this?.setOnRefreshListener {
             refrash()
         }
-    }
+    }*/
 
     override fun refrash() {
         with(binding) {
-            this?.swipeRefresh?.isRefreshing = true
+ /*           this?.swipeRefresh?.isRefreshing = true
             lifecycle.coroutineScope.launch {
                 interactor.getComics()
-            }
+            }*/
         }
     }
 
@@ -47,7 +49,7 @@ class MainActivity : AppCompatActivity(), IView {
             this?.listItem?.visibility = View.VISIBLE
             this?.listItem?.adapter = Adapter(list)
             this?.listItem?.layoutManager = LinearLayoutManager(this@MainActivity)
-            this?.swipeRefresh?.isRefreshing = false
+          //  this?.swipeRefresh?.isRefreshing = false
         }
     }
 
@@ -55,7 +57,7 @@ class MainActivity : AppCompatActivity(), IView {
         with(binding) {
             this?.listItem?.visibility = View.GONE
             this?.errorTV?.visibility = View.VISIBLE
-            this?.swipeRefresh?.isRefreshing = false
+          //  this?.swipeRefresh?.isRefreshing = false
         }
     }
 
