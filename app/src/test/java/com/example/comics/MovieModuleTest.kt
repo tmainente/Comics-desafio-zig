@@ -4,13 +4,9 @@ import android.content.Context
 import com.example.comics.data.local.AppDatabase
 import com.example.comics.data.remote.api.Api
 import com.example.comics.di.MovieModule
-import com.example.comics.domain.usecase.GetMovieUseCase
-import com.example.comics.ui.MainViewModel
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.After
 import org.junit.Assert.*
-import org.junit.Before
 import org.junit.Test
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.koinApplication

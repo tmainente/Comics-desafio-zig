@@ -1,7 +1,6 @@
 package com.example.comics.ui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,8 +32,9 @@ import com.example.comics.data.entities.MovieEntity
 @Composable
 private fun Preview(){
 
-    var movie = MovieEntity(id = 1L, title = "Holland", overview ="Nancy is a teacher whose life with her husband in Holland, Michigan, tumbles into a twisted tale when she and her colleague become suspicious of a secret.", image =  "https://image.tmdb.org/t/p/w500/1YMrOtrW7b4pL2lfD8UciZPOJGs.jpg")
-
+    var movie = MovieEntity(id = 1L, title = "Holland",
+        overview ="Nancy is a teacher whose life with her husband in Holland, Michigan, tumbles ",
+        image =  "https://image.tmdb.org/t/p/w500/1YMrOtrW7b4pL2lfD8UciZPOJGs.jpg")
     UiItemScreen(movie = movie)
 }
 

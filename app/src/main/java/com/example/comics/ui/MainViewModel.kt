@@ -1,6 +1,5 @@
 package com.example.comics.ui
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.comics.data.entities.MovieEntity
@@ -30,8 +29,8 @@ class MainViewModel(
         if (_isRefreshing.value) {
             return
         }
+        _isRefreshing.value = true
         viewModelScope.launch(ioDispatcher) {
-            try {
                 getMovieUseCase().collectLatest { movieResource ->
                     when (movieResource) {
                         is Resource.Loading -> {
@@ -54,9 +53,6 @@ class MainViewModel(
                         }
                     }
                 }
-            }catch (e: Exception){
-                _movie.value = State.Error(ERROR_MESSAGE)
-            }
         }
     }
 

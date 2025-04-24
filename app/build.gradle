@@ -4,9 +4,6 @@ plugins {
     id 'kotlin-kapt'
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
-
-
-
 }
 
 android {
@@ -83,6 +80,7 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
     implementation(libs.coil.compose)
+    implementation libs.androidx.ui.test.junit4.android
     debugImplementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.debug.compose.ui.tooling)
     kapt(libs.room.compiler)
@@ -93,8 +91,12 @@ dependencies {
     testImplementation(libs.koin.test)
     testImplementation(libs.koin.test.junit4)
     testImplementation libs.turbine
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.rules)
+    debugImplementation(libs.debug.compose.ui.test.manifest)
+    androidTestImplementation(libs.koin.test)
+    androidTestImplementation(libs.koin.test.junit4)
+    androidTestImplementation(libs.mockk)
 
 }
 

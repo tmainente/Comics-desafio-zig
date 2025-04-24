@@ -36,8 +36,6 @@ class MainViewModelTest {
     private val mockMovieList = listOf(MovieEntity(id = 1,
         title = "Mock Movie", overview = "", image = ""))
     private val mockEmptyMovieList = emptyList<MovieEntity>()
-    private val errorMessage = "Erro ao buscar Filmes"
-
     @Before
     fun setUp() {
         getMovieUseCase = mockk<GetMovieUseCase>()
@@ -109,36 +107,30 @@ class MainViewModelTest {
 
     @Test
     fun `WHEN refreshMovie called AND UseCase returns Success THEN movie emits previous Success then new Success`() = runTest {
-        // Arrange: Carga inicial
         val initialList = listOf(MovieEntity(id = 0, title = "Old Movie", overview = "", image = ""))
         every { getMovieUseCase() } returns flowOf(Resource.Success(initialList))
         viewModel.fetchMovie(isInitialLoad = true)
         advanceUntilIdle()
-
-        // Arrange: Resposta do refresh
         val newMovieList = listOf(MovieEntity(id = 2, title = "New Movie", overview = "", image = ""))
-        every { getMovieUseCase() } returns flowOf(Resource.Success(newMovieList)) // Reconfigura o mock para a próxima chamada
-
+        every { getMovieUseCase() } returns flowOf(Resource.Success(newMovieList))
         viewModel.movie.test {
-            assertEquals(State.Success(initialList).data, expectMostRecentItem().data) // Antes
-
+            assertEquals(State.Success(initialList).data, expectMostRecentItem().data)
             // Act
             viewModel.refreshMovie()
-            advanceUntilIdle() // Executa refresh
-
+            advanceUntilIdle()
             // Assert
-            assertEquals(State.Success(newMovieList).data, awaitItem().data) // Depois (sem Loading)
+            assertEquals(State.Success(newMovieList).data, awaitItem().data)
             expectNoEvents()
         }
         assertFalse(viewModel.isRefreshing.value)
-        verify(exactly = 2) { getMovieUseCase() } // Inicial + Refresh
+        verify(exactly = 2) { getMovieUseCase() }
         confirmVerified(getMovieUseCase)
     }
 
     @Test
     fun `WHEN fetchMovie called WHILE already refreshing THEN UseCase is not called again`() = runTest {
         // Arrange
-        val nonCompletingFlow = flow<Resource<List<MovieEntity>>> { /* Não emite */ }
+        val nonCompletingFlow = flow<Resource<List<MovieEntity>>> { }
         every { getMovieUseCase() } returns nonCompletingFlow
 
         // Act: Primeira chamada

@@ -29,16 +29,3 @@ inline fun <ResultType, RequestType> networkBoundResource(
 
     emitAll(flow)
 }
-
-
-inline fun <ResultType> networkBoundResourceOnly(
-    crossinline fetch: suspend () -> ResultType
-) = flow {
-    emit(Resource.Loading(null))
-    try {
-        val result = fetch()
-        emit(Resource.Success(result))
-    } catch (throwable: Throwable) {
-        emit(Resource.Error(throwable.message.toString(), null))
-    }
-}
