@@ -2,9 +2,9 @@ package com.example.comics.data.remote.repository
 
 
 import androidx.room.withTransaction
-import asMovie
 import com.example.comics.data.local.AppDatabase
 import com.example.comics.data.remote.api.Api
+import com.example.comics.data.remote.model.asMovie
 import com.example.comics.data.remote.util.networkBoundResource
 
 class MovieRepositoryImpl (
@@ -15,7 +15,7 @@ class MovieRepositoryImpl (
     private val movieDao = appDatabase.movieDao()
 
 
-    override suspend fun getMovie() = networkBoundResource(
+    override  fun getMovie() = networkBoundResource(
         query = {
             movieDao.getAllMovie()
         },

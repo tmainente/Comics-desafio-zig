@@ -1,64 +1,50 @@
 package com.example.comics.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.comics.databinding.ActivityMainBinding
-import com.example.comics.view.Adapter
-import com.example.comics.view.IView
-import com.example.comics.view.ItemVO
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.comics.ui.theme.MovieTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity(), IView {
+class MainActivity : ComponentActivity() {
 
-
-    private var binding: ActivityMainBinding? = null
     private val viewModel by viewModel<MainViewModel>()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding?.root)
-
-        refrash()
+        enableEdgeToEdge()
         viewModel.fetchMovie()
-
-        //swipeList()
-    }
-
-/*    private fun swipeList() = with(binding?.swipeRefresh) {
-        this?.setOnRefreshListener {
-            refrash()
-        }
-    }*/
-
-    override fun refrash() {
-        with(binding) {
- /*           this?.swipeRefresh?.isRefreshing = true
-            lifecycle.coroutineScope.launch {
-                interactor.getComics()
-            }*/
+        setContent {
+            MovieTheme{
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    UiMainScreen(viewModel = viewModel)
+                }
+            }
         }
     }
+}
 
-    override fun viewList(list: List<ItemVO>) {
-        with(binding) {
-            this?.errorTV?.visibility = View.GONE
-            this?.listItem?.visibility = View.VISIBLE
-            this?.listItem?.adapter = Adapter(list)
-            this?.listItem?.layoutManager = LinearLayoutManager(this@MainActivity)
-          //  this?.swipeRefresh?.isRefreshing = false
-        }
-    }
+@Composable
+fun Greeting(name: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hello $name!",
+        modifier = modifier
+    )
+}
 
-    override fun error() {
-        with(binding) {
-            this?.listItem?.visibility = View.GONE
-            this?.errorTV?.visibility = View.VISIBLE
-          //  this?.swipeRefresh?.isRefreshing = false
-        }
-    }
-
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+        Greeting("Android")
 }

@@ -1,6 +1,6 @@
 package com.example.comics.data.remote.api
 
-import MovieResponse
+import com.example.comics.data.remote.model.MovieResponse
 import retrofit2.Response
 import retrofit2.http.GET
 

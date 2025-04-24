@@ -1,77 +1,80 @@
-import com.example.comics.data.entities.MovieEntity
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+package com.example.comics.data.remote.model
 
-@Serializable
+
+import com.example.comics.data.entities.MovieEntity
+import com.google.gson.annotations.SerializedName
+
+
 data class MovieResponse(
-    @SerialName("page")
+    @SerializedName("page")
     val page: Int,
 
-    @SerialName("results")
+    @SerializedName("results")
     val results: List<MediaResult>,
 
-    @SerialName("total_pages")
+    @SerializedName("total_pages")
     val totalPages: Int,
 
-    @SerialName("total_results")
+    @SerializedName("total_results")
     val totalResults: Int
 
 
 )
 
-@Serializable
 data class MediaResult(
-    @SerialName("backdrop_path")
+    @SerializedName("backdrop_path")
     val backdropPath: String?,
 
-    @SerialName("id")
+    @SerializedName("id")
     val id: Long,
 
-    @SerialName("title")
+    @SerializedName("title")
     val title: String,
 
-    @SerialName("original_title")
+    @SerializedName("original_title")
     val originalTitle: String,
 
-    @SerialName("overview")
+    @SerializedName("overview")
     val overview: String,
 
-    @SerialName("poster_path")
+    @SerializedName("poster_path")
     val posterPath: String?,
 
-    @SerialName("media_type")
+    @SerializedName("media_type")
     val mediaType: String,
 
-    @SerialName("adult")
+    @SerializedName("adult")
     val adult: Boolean,
 
-    @SerialName("original_language")
+    @SerializedName("original_language")
     val originalLanguage: String,
 
-    @SerialName("genre_ids")
+    @SerializedName("genre_ids")
     val genreIds: List<Int>,
 
-    @SerialName("popularity")
+    @SerializedName("popularity")
     val popularity: Double,
 
-    @SerialName("release_date")
+    @SerializedName("release_date")
     val releaseDate: String?,
 
-    @SerialName("video")
+    @SerializedName("video")
     val video: Boolean,
 
-    @SerialName("vote_average")
+    @SerializedName("vote_average")
     val voteAverage: Double,
 
-    @SerialName("vote_count")
+    @SerializedName("vote_count")
     val voteCount: Int
 )
+
+private const val URL_IMG = "https://image.tmdb.org/t/p/w500/"
 
 val List<MediaResult>.asMovie: List<MovieEntity>
     get() = map {
         MovieEntity(
             id = it.id,
-            image = "https://image.tmdb.org/t/p/w500/${it.backdropPath}",
+            image = "${URL_IMG}${it.posterPath}",
             title = it.title,
             overview = it.overview
         )
