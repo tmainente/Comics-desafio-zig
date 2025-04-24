@@ -21,8 +21,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.comics.R
 import com.example.comics.data.entities.MovieEntity
 import com.example.comics.ui.components.UiItemScreen
 
@@ -37,7 +39,7 @@ fun UiMainScreen(
     val pullToRefreshState = rememberPullToRefreshState()
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Filmes em cartaz") })
+            TopAppBar(title = { Text(stringResource(id = R.string.title_bar)) })
         }
     ) { paddingValues ->
         PullToRefreshBox(
@@ -63,15 +65,8 @@ fun UiMainScreen(
                     }
 
                     is State.Success -> {
-                        if (state.data.isNullOrEmpty()) {
-                            Text(
-                                text = "Nenhum filme encontrado.",
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .testTag("emptyListMessage")
-                            )
-                        } else {
-                            LazyColumnScreen(state.data)
+                            state.data?.let {
+                                LazyColumnScreen(it)
                         }
                     }
 

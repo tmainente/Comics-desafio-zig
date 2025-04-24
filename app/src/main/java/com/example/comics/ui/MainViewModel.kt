@@ -12,7 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
-
+private const val ERROR_MESSAGE = "Erro ao buscar Filmes"
+private const val ERROR_MESSAGE_EMPTY = "Lista Vazia"
 class MainViewModel(
     private val getMovieUseCase: GetMovieUseCase,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -40,7 +41,7 @@ class MainViewModel(
                         is Resource.Success -> {
                             _isRefreshing.value = false
                             _movie.value = if (movieResource.data.isNullOrEmpty())
-                                State.Error(ERROR_MESSAGE)
+                                State.Error(ERROR_MESSAGE_EMPTY)
                             else
                                 State.Success(movieResource.data)
                         }
@@ -58,9 +59,5 @@ class MainViewModel(
 
     fun refreshMovie() {
         fetchMovie(isInitialLoad= false)
-    }
-
-    companion object {
-        private const val ERROR_MESSAGE = "Erro ao buscar Filmes"
     }
 }

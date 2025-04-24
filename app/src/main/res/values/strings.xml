@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Comics</string>
+    <string name="title_bar">Filmes em cartaz</string>
+    <string name="error">Filmes em cartaz</string>
 </resources>

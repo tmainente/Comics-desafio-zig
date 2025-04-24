@@ -7,12 +7,10 @@ import com.example.comics.domain.usecase.GetMovieUseCase
 import com.example.comics.ui.MainViewModel
 import com.example.comics.ui.State
 import com.example.comics.util.MainDispatcherRule
-
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -143,7 +141,6 @@ class MainViewModelTest {
         // Act: Segunda chamada (deve retornar cedo)
         viewModel.fetchMovie(isInitialLoad = false)
         advanceUntilIdle()
-
         // Assert: UseCase chamado só uma vez
         verify(exactly = 1) { getMovieUseCase() }
 

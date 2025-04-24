@@ -7,7 +7,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit.SECONDS
-
+private const val TIMEOUT = 30L
 object NetworkModule {
     val modules = module {
         single { provideRetrofit() }
@@ -17,9 +17,9 @@ object NetworkModule {
 
     private fun provideRetrofit(): Retrofit {
         val client = OkHttpClient.Builder()
-            .connectTimeout(30, SECONDS)
-            .readTimeout(30, SECONDS)
-            .writeTimeout(30, SECONDS)
+            .connectTimeout(TIMEOUT, SECONDS)
+            .readTimeout(TIMEOUT, SECONDS)
+            .writeTimeout(TIMEOUT, SECONDS)
             .addInterceptor(headerInterceptor())
             .build()
         return Retrofit.Builder()
