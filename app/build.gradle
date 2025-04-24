@@ -6,9 +6,19 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { stream ->
+        localProperties.load(stream)
+    }
+} else {
+    println("Warning: local.properties file not found at ${localPropertiesFile.absolutePath}")
+}
+
 android {
     compileSdk 35
-
     defaultConfig {
         applicationId "com.example.comics"
         namespace 'com.example.comics'
@@ -16,7 +26,6 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -27,6 +36,10 @@ android {
                 ]
             }
         }
+        def apiKey = localProperties.getProperty('apiKey', '') // Padrão: string vazia
+        def baseUrl = localProperties.getProperty('baseUrl', 'https://api.default.com/')
+        buildConfigField "String", "API_KEY", "\"${apiKey}\""
+        buildConfigField "String", "BASE_URL", "\"${baseUrl}\""
     }
 
     buildTypes {
@@ -38,6 +51,7 @@ android {
 
     buildFeatures {
         compose true
+        buildConfig true
     }
 
     composeOptions {
@@ -80,23 +94,25 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
     implementation(libs.coil.compose)
-    implementation libs.androidx.ui.test.junit4.android
     debugImplementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.debug.compose.ui.tooling)
+    debugImplementation(libs.debug.compose.ui.test.manifest)
     kapt(libs.room.compiler)
-    testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.coroutines.test)
     testImplementation(libs.arch.core.testing)
     testImplementation(libs.koin.test)
     testImplementation(libs.koin.test.junit4)
     testImplementation libs.turbine
-    androidTestImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.rules)
-    debugImplementation(libs.debug.compose.ui.test.manifest)
     androidTestImplementation(libs.koin.test)
-    androidTestImplementation(libs.koin.test.junit4)
     androidTestImplementation(libs.mockk)
+    def composeBom = libs.androidx.compose.bom
+    implementation composeBom
+    androidTestImplementation composeBom
+    androidTestImplementation (libs.ui.test.junit4)
+    androidTestImplementation (libs.androidx.runner.v152)
+
+
 
 }
 

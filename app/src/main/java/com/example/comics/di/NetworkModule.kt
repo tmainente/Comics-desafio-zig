@@ -1,5 +1,6 @@
 package com.example.comics.di
 
+import com.example.comics.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.koin.dsl.module
@@ -11,6 +12,8 @@ object NetworkModule {
     val modules = module {
         single { provideRetrofit() }
     }
+    private val apiKey = BuildConfig.API_KEY
+    private val baseUrl = BuildConfig.BASE_URL
 
     private fun provideRetrofit(): Retrofit {
         val client = OkHttpClient.Builder()
@@ -20,7 +23,7 @@ object NetworkModule {
             .addInterceptor(headerInterceptor())
             .build()
         return Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/")
+            .baseUrl(baseUrl)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -29,7 +32,7 @@ object NetworkModule {
     private fun headerInterceptor() =  Interceptor { chain ->
         val originalRequest = chain.request()
         val requestBuilder = originalRequest.newBuilder()
-            .header("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMjJjNmNjZTJmMThjZGQ3YmEwYmUyYjlmYTJiOGU3MyIsIm5iZiI6MTc0MzE3OTQyMi4zODgsInN1YiI6IjY3ZTZjZTllZjg0Njc5NGU5OTEwZjY0MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.i-FWN8afMCXSY6Skjs1K_5pf_qyX8yaU0ehq4ve8SqM")
+            .header("Authorization", apiKey)
         val newRequest = requestBuilder.build()
         chain.proceed(newRequest)
     }

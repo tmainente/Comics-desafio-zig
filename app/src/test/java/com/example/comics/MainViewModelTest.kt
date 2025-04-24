@@ -135,7 +135,7 @@ class MainViewModelTest {
 
         // Act: Primeira chamada
         viewModel.fetchMovie(isInitialLoad = true)
-        advanceUntilIdle() // Define isRefreshing = true
+        advanceUntilIdle()
 
         // Assert: Verifica estado intermediário
         assertTrue(viewModel.isRefreshing.value)
