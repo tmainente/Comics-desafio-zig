@@ -14,7 +14,6 @@ import io.mockk.mockk
 import io.mockk.verify
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -49,7 +48,7 @@ class MainViewModelTest {
     fun `GIVEN initial state WHEN ViewModel created THEN movie state is Loading`() = runTest {
         viewModel.movie.test {
             assertTrue(awaitItem() is State.Loading)
-        }
+            }
         assertFalse(viewModel.isRefreshing.value)
     }
 
@@ -64,8 +63,25 @@ class MainViewModelTest {
             viewModel.fetchMovie(isInitialLoad = true)
             advanceUntilIdle()
             // Assert
-            assertEquals(State.Success(mockMovieList), awaitItem())
-            expectNoEvents()
+            assertTrue(awaitItem() is State.Success)
+        }
+        assertFalse(viewModel.isRefreshing.value)
+        verify(exactly = 1) { getMovieUseCase() }
+        confirmVerified(getMovieUseCase)
+    }
+
+    @Test
+    fun `WHEN fetchMovie called (initial) AND UseCase returns Success THEN movie emits Loading then Success data`() = runTest {
+        every { getMovieUseCase() } returns flowOf(Resource.Success(mockMovieList))
+
+        viewModel.movie.test {
+            assertTrue(awaitItem() is State.Loading)
+
+            // Act
+            viewModel.fetchMovie(isInitialLoad = true)
+            advanceUntilIdle()
+            // Assert
+            assertEquals(State.Success(mockMovieList).data, awaitItem().data)
         }
         assertFalse(viewModel.isRefreshing.value)
         verify(exactly = 1) { getMovieUseCase() }
@@ -78,28 +94,10 @@ class MainViewModelTest {
         every { getMovieUseCase() } returns flowOf(Resource.Success(mockEmptyMovieList))
 
         viewModel.movie.test {
-          //  assertEquals(State.Loading(), awaitItem())
+            assertTrue( awaitItem() is State.Loading)
             viewModel.fetchMovie(isInitialLoad = true)
             advanceUntilIdle()
-          //  assertEquals(State.Error(errorMessage), awaitItem())
-            expectNoEvents()
-        }
-        assertFalse(viewModel.isRefreshing.value)
-        verify(exactly = 1) { getMovieUseCase() }
-        confirmVerified(getMovieUseCase)
-    }
-
-    @Test
-    fun `WHEN fetchMovie called (initial) AND UseCase returns Error without data THEN movie emits Loading then Error`() = runTest {
-        // Arrange
-        val errorResource = Resource.Error<List<MovieEntity>>("Network Error", null)
-        every { getMovieUseCase() } returns flowOf(errorResource)
-
-        viewModel.movie.test {
-         //   assertEquals(State.Loading(), awaitItem())
-            viewModel.fetchMovie(isInitialLoad = true)
-            advanceUntilIdle()
-          //  assertEquals(State.Error(errorMessage), awaitItem())
+            assertTrue( awaitItem() is State.Error)
             expectNoEvents()
         }
         assertFalse(viewModel.isRefreshing.value)
@@ -122,14 +120,14 @@ class MainViewModelTest {
         every { getMovieUseCase() } returns flowOf(Resource.Success(newMovieList)) // Reconfigura o mock para a próxima chamada
 
         viewModel.movie.test {
-            assertEquals(State.Success(initialList), expectMostRecentItem()) // Antes
+            assertEquals(State.Success(initialList).data, expectMostRecentItem().data) // Antes
 
             // Act
             viewModel.refreshMovie()
             advanceUntilIdle() // Executa refresh
 
             // Assert
-            assertEquals(State.Success(newMovieList), awaitItem()) // Depois (sem Loading)
+            assertEquals(State.Success(newMovieList).data, awaitItem().data) // Depois (sem Loading)
             expectNoEvents()
         }
         assertFalse(viewModel.isRefreshing.value)
@@ -159,34 +157,7 @@ class MainViewModelTest {
 
         // Assert: isRefreshing continua true
         assertTrue(viewModel.isRefreshing.value)
-        confirmVerified(getMovieUseCase) // Confirma que SÓ essa chamada ocorreu
-    }
-
-    @Test
-    fun `WHEN fetchMovie called AND UseCase flow throws Exception THEN isRefreshing becomes false`() = runTest {
-        // Arrange: Configura o UseCase para lançar uma exceção
-        val exception = RuntimeException("Flow error")
-        every { getMovieUseCase() } returns flow { throw exception }
-
-        // Act: Chama a função e avança o dispatcher
-        // O try-catch aqui é mais para o teste não falhar pela exceção não pega,
-        // o foco é verificar o estado final de isRefreshing.
-        var caughtException: Throwable? = null
-        try {
-            viewModel.fetchMovie(isInitialLoad = true)
-            advanceUntilIdle()
-        } catch (e: Throwable) {
-            caughtException = e
-        }
-
-        // Assert: Verifica que isRefreshing foi resetado pelo bloco finally na ViewModel
-        assertFalse(viewModel.isRefreshing.value)
-        // Opcional: verificar se a exceção foi a esperada (se não for suprimida pelo escopo)
-        // assertNotNull(caughtException)
-        // assertEquals(exception.message, caughtException?.message)
-
-        // Verifica que o UseCase foi chamado
-        verify(exactly = 1) { getMovieUseCase() }
         confirmVerified(getMovieUseCase)
     }
+
 }

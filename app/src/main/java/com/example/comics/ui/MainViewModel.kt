@@ -31,7 +31,7 @@ class MainViewModel(
             return
         }
         viewModelScope.launch(ioDispatcher) {
-            _isRefreshing.value = true
+            try {
                 getMovieUseCase().collectLatest { movieResource ->
                     when (movieResource) {
                         is Resource.Loading -> {
@@ -39,13 +39,11 @@ class MainViewModel(
                         }
 
                         is Resource.Success -> {
+                            _isRefreshing.value = false
                             _movie.value = if (movieResource.data.isNullOrEmpty())
                                 State.Error(ERROR_MESSAGE)
                             else
                                 State.Success(movieResource.data)
-
-                            _isRefreshing.value = false
-
                         }
 
                         else -> {
@@ -56,7 +54,9 @@ class MainViewModel(
                         }
                     }
                 }
-
+            }catch (e: Exception){
+                _movie.value = State.Error(ERROR_MESSAGE)
+            }
         }
     }
 
